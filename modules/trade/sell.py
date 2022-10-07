@@ -10,8 +10,8 @@ from binance.helpers import round_step_size
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-API_KEY = config['binance.com']['api_key']
-API_SECRET = config['binance.com']['api_secret']
+API_KEY = config['binance']['api_key']
+API_SECRET = config['binance']['api_secret']
 DEFAULT_PAIR = config['settings']['default_pair']
 PRICE_TO_BUY = config['settings'].getint('price_to_buy')
 
@@ -44,3 +44,10 @@ def sell(symbol: str = DEFAULT_PAIR) -> client.order_market_sell:
             return order
     except Exception:
         print(traceback.format_exc())
+
+
+def sell_all():
+    pass
+    # coins = db.get_the_names_of_purchased_coins()
+    # for coin in coins:
+    #     sell(coin)

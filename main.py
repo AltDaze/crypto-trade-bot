@@ -46,8 +46,7 @@ def main():
     #  3. Добавить возможность покупать на "фантики"
     # db.create_database()
     print(scan())
-    while True:
-        pass
+    # while True:
         # buy_process()
         # sell_process()
 
