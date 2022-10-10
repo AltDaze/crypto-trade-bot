@@ -2,3 +2,4 @@ python-binance==1.0.15
 sqlalchemy==1.4.41
 psycopg2==2.9.4
 configparser==5.0.2
+asyncio==3.4.3

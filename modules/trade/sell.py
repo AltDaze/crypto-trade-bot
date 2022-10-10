@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import decimal
 import configparser
-# import database as db
 import traceback
+from decimal import Decimal
 from binance import Client
 from binance.helpers import round_step_size
+import modules.database as db
+from modules.analysis.relevance import relevance
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -19,13 +20,11 @@ client = Client(API_KEY, API_SECRET, {"verify": True, "timeout": 20})
 
 
 def sell(symbol: str = DEFAULT_PAIR) -> client.order_market_sell:
-    # TODO: Попробовать упростить
-    #  заменить все проблемы с lot size на ту цену, которая имеется
-    #  учитывать комиссия
+    # TODO: Продавать через BNB и в таком случае не надо учитывать комиссию
     try:
-        balance = decimal.Decimal(client.get_asset_balance(symbol.replace('BUSD', ''))['free'])
+        """
+        balance = Decimal(client.get_asset_balance(symbol.replace('BUSD', ''))['free'])
         symbol_info = client.get_symbol_info(symbol)
-        min_notional = decimal.Decimal(symbol_info['filters'][3]['minNotional'])
         step_size = symbol_info['filters'][2]['stepSize']
 
         # fix lot size
@@ -36,10 +35,14 @@ def sell(symbol: str = DEFAULT_PAIR) -> client.order_market_sell:
             else:
                 length += 1
 
-        qty = int(balance) if length == 0 else decimal.Decimal(str(balance)[:length])
-        if min_notional <= qty <= balance:
+        qty = balance if length == 0 else Decimal(str(balance)[:length])  # [:step_size.find("1")-1]
+        """
+        balance = Decimal(client.get_asset_balance(symbol.replace('BUSD', '')).get("free"))
+        step_size = client.get_symbol_info(symbol).get("filters").get(2).get("stepSize")
+        qty = round_step_size(quantity=balance, step_size=Decimal(step_size))
+        if qty <= balance:
             order = client.order_market_sell(symbol=symbol, quantity=qty)
-            # db.remove_purchased_coin(symbol)
+            db.remove_purchased_coin(symbol)
             print(f'[SELL] {symbol=} {qty=}')
             return order
     except Exception:
@@ -51,3 +54,14 @@ def sell_all():
     # coins = db.get_the_names_of_purchased_coins()
     # for coin in coins:
     #     sell(coin)
+
+
+def sell_process():
+    # The process of selling a coin
+    try:
+        coins = db.get_the_names_of_purchased_coins()
+        for coin in coins:
+            if relevance(coin):
+                sell(coin)
+    except Exception:
+        print(traceback.format_exc())
