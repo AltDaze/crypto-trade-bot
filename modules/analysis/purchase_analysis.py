@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import configparser
-from utils import percent_difference
+from .utils import percent_difference
 from binance import Client
 
 
@@ -28,7 +28,7 @@ def analysis(symbol: str = DEFAULT_PAIR) -> bool:
     highest_price = current_price
     lowest_price = current_price
     for candle in candles:
-        price = float(candle.get(2))  # High price
+        price = float(candle[2])  # High price
         if price > highest_price:
             highest_price = price
         if price < lowest_price:

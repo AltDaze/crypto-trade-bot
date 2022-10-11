@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import configparser
+import pprint
 import traceback
 from decimal import Decimal
 
+import binance.exceptions
 from binance import Client
 from binance.helpers import round_step_size
 
-from ..database import create_database
-import modules.database as db
+# from ..database import create_database
+import modules.database.database as db
 from modules.analysis.purchase_analysis import analysis
 from modules.analysis.scan import scan
 
@@ -27,25 +29,27 @@ client = Client(API_KEY, API_SECRET, {"verify": True, "timeout": 20})
 def buy(symbol: str = DEFAULT_PAIR, price: float = PRICE_TO_BUY) -> client.order_market_buy:
     try:
         symbol_info = client.get_symbol_info(symbol).get("filters")
-        min_notional = symbol_info.get(3).get('minNotional')
-        step_size = symbol_info.get(2).get('stepSize')
+        min_notional = symbol_info[3].get('minNotional')
+        step_size = symbol_info[2].get('stepSize')
         rate = client.get_symbol_ticker(symbol=symbol).get('price')
         amount = 1 / Decimal(rate) * price
         qty = round_step_size(quantity=amount, step_size=Decimal(step_size))
         if qty > Decimal(min_notional):
             order = client.order_market_buy(symbol=symbol, quantity=qty)
             db.purchased_coin(symbol, qty, rate)
-            print(f'[BUY] {qty=} {type(qty)}')
+            print(f'[BUY] {symbol=} {qty=} {type(qty)}')
             return order
-    except Exception:
+    except binance.exceptions.BinanceAPIException as ex:
+        match ex.code:
+            case -1013:
+                pass
+            case -2010:
+                raise SystemExit(f'{ex.code=} ({ex.message=})')
+    finally:
         print(traceback.format_exc())
 
 
 def buy_process():
-    # The process of buying a coin
-    try:
-        for coin in scan():
-            if analysis(coin) and db.coins_limit(COINS_LIMIT) and db.purchased_coin_doesnt_exist(coin):
-                buy(symbol=coin, price=PRICE_TO_BUY)
-    except Exception:
-        print(traceback.format_exc())
+    for coin in scan():
+        if analysis(coin) and db.coins_limit(COINS_LIMIT) and db.purchased_coin_doesnt_exist(coin):
+            buy(symbol=coin, price=PRICE_TO_BUY)

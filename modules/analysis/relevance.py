@@ -2,9 +2,9 @@
 
 import configparser
 from decimal import Decimal
-from utils import percent_difference
+from .utils import percent_difference
 from binance import Client
-import modules.database as db
+import modules.database.database as db
 
 
 config = configparser.ConfigParser()

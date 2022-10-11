@@ -5,7 +5,7 @@ import traceback
 from decimal import Decimal
 from binance import Client
 from binance.helpers import round_step_size
-import modules.database as db
+import modules.database.database as db
 from modules.analysis.relevance import relevance
 
 config = configparser.ConfigParser()

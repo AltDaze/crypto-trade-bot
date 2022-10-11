@@ -1,18 +1,24 @@
-### models.py ###
+import psycopg2
+from psycopg2 import Error
 
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Date
+try:
+    # Connect to an existing database
+    connection = psycopg2.connect(user="postgres",
+                                  password="pynative@#29",
+                                  host="127.0.0.1",
+                                  port="5432",
+                                  database="postgres_db")
 
-Base = declarative_base()
+    # Create a cursor to perform database operations
+    cursor = connection.cursor()
+    # Print PostgreSQL details
+    print("PostgreSQL server information")
+    print(connection.get_dsn_parameters(), "\n")
+    # Executing a SQL query
+    cursor.execute("SELECT version();")
+    # Fetch result
+    record = cursor.fetchone()
+    print("You are connected to - ", record, "\n")
 
-
-class Book(Base):
-    __tablename__ = 'books'
-    id = Column(Integer, primary_key=True)
-    title = Column(String)
-    author = Column(String)
-    pages = Column(Integer)
-    published = Column(Date)
-
-    def __repr__(self):
-        return f"Book({self.title=}, {self.author=} {self.pages=} {self.published=})"
+except (Exception, Error) as error:
+    print("Error while connecting to PostgreSQL", error)
