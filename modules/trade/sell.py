@@ -57,11 +57,12 @@ def sell_all():
 
 
 def sell_process():
-    # The process of selling a coin
     try:
         coins = db.get_the_names_of_purchased_coins()
         for coin in coins:
             if relevance(coin):
                 sell(coin)
+    except TypeError:
+        pass
     except Exception:
         print(traceback.format_exc())
