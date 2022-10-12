@@ -1,16 +1,28 @@
+# -*- coding: utf-8 -*-
+
 import psycopg2
 import traceback
 from decimal import Decimal
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+DATABASE = config['database']['database']
+USER = config['database']['user']
+PASSWORD = config['database']['password']
+HOST = config['database']['host']
+PORT = config['database']['port']
 
 
 def with_connection(f):
     def with_connection_(*args, **kwargs):
         con = psycopg2.connect(
-            database="postgres",
-            user="postgres",
-            password="postgres",
-            host="127.0.0.1",
-            port="5432"
+            database=DATABASE,
+            user=USER,
+            password=PASSWORD,
+            host=HOST,
+            port=PORT
         )
         try:
             rv = f(con, *args, **kwargs)
