@@ -5,7 +5,7 @@ import traceback
 from decimal import Decimal
 from binance import Client
 from binance.helpers import round_step_size
-import modules.database.database as db
+from modules.database import get, delete
 from modules.analysis.relevance import relevance
 
 config = configparser.ConfigParser()
@@ -42,7 +42,7 @@ def sell(symbol: str = DEFAULT_PAIR) -> client.order_market_sell:
         qty = round_step_size(quantity=balance, step_size=Decimal(step_size))
         if qty <= balance:
             order = client.order_market_sell(symbol=symbol, quantity=qty)
-            db.remove_purchased_coin(symbol)
+            delete.purchased_coin(symbol)
             print(f'[SELL] {symbol=} {qty=}')
             return order
     except Exception:
@@ -58,7 +58,7 @@ def sell_all():
 
 def sell_process():
     try:
-        coins = db.get_the_names_of_purchased_coins()
+        coins = get.the_names_of_purchased_coins()
         for coin in coins:
             if relevance(coin):
                 sell(coin)

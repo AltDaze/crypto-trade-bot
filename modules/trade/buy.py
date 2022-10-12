@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import configparser
-import pprint
 import traceback
-from decimal import Decimal
-
 import binance.exceptions
 from binance import Client
+from decimal import Decimal
 from binance.helpers import round_step_size
-
-# from ..database import create_database
-import modules.database.database as db
+from modules.database import get, create
 from modules.analysis.purchase_analysis import analysis
 from modules.analysis.scan import scan
 
@@ -36,7 +32,7 @@ def buy(symbol: str = DEFAULT_PAIR, price: float = PRICE_TO_BUY) -> client.order
         qty = round_step_size(quantity=amount, step_size=Decimal(step_size))
         if qty > Decimal(min_notional):
             order = client.order_market_buy(symbol=symbol, quantity=qty)
-            db.purchased_coin(symbol, qty, rate)
+            create.purchased_coin(symbol, qty, rate)
             print(f'[BUY] {symbol=} {qty=} {type(qty)}')
             return order
     except binance.exceptions.BinanceAPIException as ex:
@@ -51,5 +47,5 @@ def buy(symbol: str = DEFAULT_PAIR, price: float = PRICE_TO_BUY) -> client.order
 
 def buy_process():
     for coin in scan():
-        if analysis(coin) and db.coins_limit(COINS_LIMIT) and db.purchased_coin_doesnt_exist(coin):
+        if analysis(coin) and get.coins_limit(COINS_LIMIT) and get.purchased_coin_doesnt_exist(coin):
             buy(symbol=coin, price=PRICE_TO_BUY)

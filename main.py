@@ -3,7 +3,7 @@
 import asyncio
 from modules.trade.buy import buy_process
 from modules.trade.sell import sell_process
-from modules.database.database import create_database
+from modules.database.create import create_database
 
 
 def main():
