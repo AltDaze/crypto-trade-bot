@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 
-import psycopg2
-import traceback
-from decimal import Decimal
 import configparser
+import os
+import traceback
+
+import psycopg2
+import yaml
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(os.path.dirname(__file__) + '/../../config.ini')
 
-DATABASE = config['database']['database']
-USER = config['database']['user']
-PASSWORD = config['database']['password']
-HOST = config['database']['host']
-PORT = config['database']['port']
+with open(os.path.dirname(__file__) + '/../../settings.yaml', 'r', encoding="utf8") as file:
+    settings = yaml.safe_load(file)
+
+DATABASE = settings['database']['database']
+USER = settings['database']['user']
+PASSWORD = settings['database']['password']
+HOST = settings['database']['host']
+PORT = settings['database']['port']
 
 
 def with_connection(f):
@@ -24,8 +29,10 @@ def with_connection(f):
             host=HOST,
             port=PORT
         )
+        con.autocommit = True
+        cursor = con.cursor()
         try:
-            rv = f(con, *args, **kwargs)
+            rv = f(cursor, *args, **kwargs)
         except Exception:
             con.rollback()
             raise
@@ -43,6 +50,7 @@ def exception_handler(func):
     def wrapper(*args, **kwargs):
         try:
             func(*args, **kwargs)
-        except Exception:
+        finally:
             print(traceback.format_exc())
+
     return wrapper

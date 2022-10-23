@@ -1,0 +1,22 @@
+general:
+  comission: 0.1
+
+trade:
+  demo: False
+  coins_limit: 4
+  price_to_buy: 15
+  default_pair: BTCBUSD
+  sell:
+    fall_percentage: 0.5
+  buy:
+    fall_percentage: 2
+  growth_range:
+    from: 10
+    to: 50
+
+database:
+  database: trades
+  user: postgres
+  password: postgres
+  host: 127.0.0.1
+  port: 5432
