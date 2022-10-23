@@ -11,7 +11,6 @@ from binance.helpers import round_step_size
 def main():
     # TODO:
     #  1. Асинхронность
-    #  2. забыл че хотел написать.
     #  3. Добавить возможность покупать на "фантики"
     #  4. Добавить бекенд и сверстать страницу с анализом
     #  5. Remove exception_handle in database
