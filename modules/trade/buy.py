@@ -3,6 +3,7 @@
 import configparser
 import os
 import traceback
+from configparser import ConfigParser
 from decimal import Decimal
 from pprint import pprint as pp
 from typing import Union
@@ -12,14 +13,15 @@ import yaml
 from binance import Client
 from binance.helpers import round_step_size
 
-from trade.modules.analysis.purchase_analysis import analysis
-from trade.modules.analysis.scan import scan
-from trade.modules.database import get, create
+from modules.analysis.purchase_analysis import analysis
+from modules.analysis.scan import scan
+from modules.database import get, create
 
-config = configparser.ConfigParser()
-config.read(os.path.dirname(__file__) + '/../../config.ini')
 
-with open(os.path.dirname(__file__) + '/../../settings.yaml', 'r', encoding="utf8") as file:
+config: ConfigParser = configparser.ConfigParser()
+config.read('{0}/../../config.ini'.format(os.path.dirname(__file__)))
+
+with open('{0}/../../settings.yaml'.format(os.path.dirname(__file__)), 'r', encoding="utf8") as file:
     settings = yaml.safe_load(file)
 
 API_KEY = config['binance']['api_key']

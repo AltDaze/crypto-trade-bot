@@ -2,19 +2,20 @@
 
 import configparser
 import os
+from configparser import ConfigParser
 from decimal import Decimal
 
 import yaml
 from binance import Client
 
-from trade.modules.analysis.utils import percent_difference
-from trade.modules.database import get
+from modules.analysis.utils import percent_difference
+from modules.database import get
 from typing import Union
 
-config = configparser.ConfigParser()
-config.read(os.path.dirname(__file__) + '/../../config.ini')
+config: ConfigParser = configparser.ConfigParser()
+config.read('{0}/../../config.ini'.format(os.path.dirname(__file__)))
 
-with open(os.path.dirname(__file__) + '/../../settings.yaml', 'r', encoding="utf8") as file:
+with open('{0}/../../settings.yaml'.format(os.path.dirname(__file__)), 'r', encoding="utf8") as file:
     settings = yaml.safe_load(file)
 
 API_KEY = config['binance']['api_key']

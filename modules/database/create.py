@@ -2,7 +2,7 @@ from decimal import Decimal
 
 import psycopg2
 
-from trade.modules.database.other import with_connection, exception_handler
+from modules.database.other import with_connection, exception_handler
 
 
 @with_connection

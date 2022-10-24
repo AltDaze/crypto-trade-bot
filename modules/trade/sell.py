@@ -3,17 +3,18 @@
 import configparser
 import os
 import traceback
+from configparser import ConfigParser
 from decimal import Decimal
 
 import yaml
 from binance import Client
 from binance.helpers import round_step_size
 
-from trade.modules.analysis.relevance import relevance
-from trade.modules.database import get, delete
+from modules.analysis.relevance import relevance
+from modules.database import get, delete
 
-config = configparser.ConfigParser()
-config.read(os.path.dirname(__file__) + '/../../config.ini')
+config: ConfigParser = configparser.ConfigParser()
+config.read('{0}/../../config.ini'.format(os.path.dirname(__file__)))
 
 with open(os.path.dirname(__file__) + '/../../settings.yaml', 'r', encoding="utf8") as file:
     settings = yaml.safe_load(file)
