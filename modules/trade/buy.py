@@ -17,7 +17,6 @@ from modules.analysis.purchase_analysis import analysis
 from modules.analysis.scan import scan
 from modules.database import get, create
 
-
 config: ConfigParser = configparser.ConfigParser()
 config.read('{0}/../../config.ini'.format(os.path.dirname(__file__)))
 

@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+
 from modules.trade.buy import buy_process
 from modules.trade.sell import sell_process
-from modules.tests import test_database
-from binance import Client
-from binance.helpers import round_step_size
 
 
 def main():

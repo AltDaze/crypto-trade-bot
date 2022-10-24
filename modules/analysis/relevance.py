@@ -4,13 +4,13 @@ import configparser
 import os
 from configparser import ConfigParser
 from decimal import Decimal
+from typing import Union
 
 import yaml
 from binance import Client
 
 from modules.analysis.utils import percent_difference
 from modules.database import get
-from typing import Union
 
 config: ConfigParser = configparser.ConfigParser()
 config.read('{0}/../../config.ini'.format(os.path.dirname(__file__)))
@@ -24,7 +24,7 @@ FALL_PERCENTAGE = settings['trade']['sell']['fall_percentage']
 FALL_PERCENTAGE_TO_BUY = settings['trade']['buy']['fall_percentage']
 DEFAULT_PAIR = settings['trade']['default_pair']
 
-client = Client(API_KEY, API_SECRET, {"verify": True, "timeout": 20})
+client = Client(API_KEY, API_SECRET, {'verify': True, "timeout": 20})
 
 
 def get_highest_price(symbol: str = DEFAULT_PAIR, deal_time: Union[int, float] = None) -> Decimal:
@@ -45,6 +45,8 @@ def get_highest_price(symbol: str = DEFAULT_PAIR, deal_time: Union[int, float] =
 
 def relevance(symbol: str = DEFAULT_PAIR, deal_id: int = None) -> bool:
     # Returns True if the coin is still active, else False
+    # TODO: Реализовать обработку случаев, если не был передан deal_id, raise etc.
+    #  Учитывать комиссию
     exchange_rate = Decimal(
         client.get_symbol_ticker(symbol=symbol).get('price')
     )
