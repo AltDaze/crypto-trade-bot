@@ -10,8 +10,8 @@ import yaml
 from binance import Client
 from binance.helpers import round_step_size
 
-from modules.analysis.relevance import relevance
 from modules.database import get, delete
+from .utils import get_relevance
 
 config: ConfigParser = configparser.ConfigParser()
 config.read('{0}/../../config.ini'.format(os.path.dirname(__file__)))
@@ -53,10 +53,11 @@ def sell_process():
         deal_ids = get.all_deal_id()
         for deal_id in deal_ids: ...
         """
-        coins = get.the_names_of_purchased_coins()
+        # TODO: Change coins =get.the_names... на deal_ids = get.all_deal...
+        coins: list = get.the_names_of_purchased_coins()
         if coins is not None:
             for coin in coins:
-                if relevance(coin):
+                if get_relevance(coin):
                     sell(coin)
     finally:
         print(traceback.format_exc())
