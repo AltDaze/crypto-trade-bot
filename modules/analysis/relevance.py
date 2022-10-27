@@ -13,7 +13,7 @@ with open('{0}/../../settings.yaml'.format(os.path.dirname(__file__)), 'r', enco
 FALL_PERCENTAGE = settings['trade']['sell']['fall_percentage']
 
 
-def relevance(exchange_rate: Decimal = None, highest_price: Decimal = None) -> bool:
+def relevance(exchange_rate: Decimal, highest_price: Decimal) -> bool:
     # Returns True if the coin is still active, else False
     if percent_difference(highest_price, exchange_rate) > FALL_PERCENTAGE:
         # If the difference is greater than N%, then the coin is sold

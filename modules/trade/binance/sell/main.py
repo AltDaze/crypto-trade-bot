@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import configparser
 import os
 import traceback
-from configparser import ConfigParser
 from decimal import Decimal
 
 import yaml
@@ -13,26 +11,23 @@ from binance.helpers import round_step_size
 from modules.database import get, delete
 from .utils import get_relevance
 
-config: ConfigParser = configparser.ConfigParser()
-config.read('{0}/../../config.ini'.format(os.path.dirname(__file__)))
-
-with open(os.path.dirname(__file__) + '/../../settings.yaml', 'r', encoding="utf8") as file:
+with open('{0}/../../../../settings.yaml'.format(os.path.dirname(__file__)), 'r', encoding="utf8") as file:
     settings = yaml.safe_load(file)
 
-API_KEY = config['binance']['api_key']
-API_SECRET = config['binance']['api_secret']
 DEFAULT_PAIR = settings['trade']['default_pair']
 PRICE_TO_BUY = settings['trade']['price_to_buy']
 
-client = Client(API_KEY, API_SECRET, {"verify": True, "timeout": 20})
 
-
-def sell(symbol: str = DEFAULT_PAIR) -> client.order_market_sell:
+def sell(client: Client, symbol: str) -> Client.order_market_sell:
     # TODO: Продавать через BNB и в таком случае не надо учитывать комиссию
     try:
-        balance = Decimal(client.get_asset_balance(symbol.replace('BUSD', '')).get("free"))
-        step_size = Decimal(client.get_symbol_info(symbol).get("filters").get(2).get("stepSize"))
-        qty = round_step_size(quantity=balance, step_size=step_size)
+        balance: Decimal = Decimal(
+            client.get_asset_balance(symbol.replace('BUSD', '')).get("free")
+        )
+        step_size: Decimal = Decimal(
+            client.get_symbol_info(symbol).get("filters").get(2).get("stepSize")
+        )
+        qty: float = round_step_size(quantity=balance, step_size=step_size)
         if qty <= balance:
             delete.purchased_coin(symbol)
             return client.order_market_sell(symbol=symbol, quantity=qty)
@@ -40,14 +35,14 @@ def sell(symbol: str = DEFAULT_PAIR) -> client.order_market_sell:
         print(traceback.format_exc())
 
 
-def sell_all():
+def sell_all(client: Client) -> None:
     coins = get.the_names_of_purchased_coins()
     if coins is not None:
         for coin in coins:
-            sell(coin)
+            sell(client=client, symbol=coin)
 
 
-def sell_process():
+def sell_process(client: Client) -> None:
     try:
         """
         deal_ids = get.all_deal_id()
@@ -57,7 +52,7 @@ def sell_process():
         coins: list = get.the_names_of_purchased_coins()
         if coins is not None:
             for coin in coins:
-                if get_relevance(coin):
-                    sell(coin)
+                if get_relevance(client=client, coin=coin):
+                    sell(client=client, symbol=coin)
     finally:
         print(traceback.format_exc())

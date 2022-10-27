@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import configparser
-import os
 import traceback
-from configparser import ConfigParser
 from decimal import Decimal
 
 from binance import Client
@@ -11,16 +8,8 @@ from binance import Client
 from modules.analysis.relevance import relevance
 from modules.database import get
 
-config: ConfigParser = configparser.ConfigParser()
-config.read('{0}/../../config.ini'.format(os.path.dirname(__file__)))
 
-API_KEY = config['binance']['api_key']
-API_SECRET = config['binance']['api_secret']
-
-client: Client = Client(API_KEY, API_SECRET, {"verify": True, "timeout": 20})
-
-
-def get_relevance(coin):
+def get_relevance(client: Client, coin: str) -> bool:
     try:
         deal_id: int = 0
         deal_time: int = get.deal_time(deal_id)

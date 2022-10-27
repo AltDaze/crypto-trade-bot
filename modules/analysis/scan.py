@@ -12,7 +12,7 @@ GROWTH_FROM = settings['trade']['growth_range']['from']
 GROWTH_TO = settings['trade']['growth_range']['to']
 
 
-def scan(tickers: list = None) -> tuple:
+def scan(tickers: list) -> tuple:
     # The function returns the current coins with the price to BUSD and the exchange rate
     symbols: list = []
     for ticker in tickers:
