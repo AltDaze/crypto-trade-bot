@@ -5,7 +5,7 @@ from decimal import Decimal
 
 import yaml
 
-from .utils import percent_difference
+from modules.analysis.utils import percent_difference
 
 with open(os.path.dirname(__file__) + '/../../settings.yaml', 'r', encoding="utf8") as file:
     settings = yaml.safe_load(file)

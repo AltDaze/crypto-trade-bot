@@ -8,8 +8,8 @@ import binance.exceptions
 import yaml
 from binance import Client
 
-from modules.analysis.purchase_analysis import analysis
-from modules.analysis.scan import scan
+from modules.analysis.buy.purchase_analysis import analysis
+from modules.analysis.buy.scan import scan
 from modules.database.methods import get
 from modules.trade.binance.buy.utils import get_prices, get_qty, get_min_notional
 

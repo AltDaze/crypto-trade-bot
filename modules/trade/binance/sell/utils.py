@@ -5,7 +5,7 @@ from decimal import Decimal
 
 from binance import Client
 
-from modules.analysis.relevance import relevance
+from modules.analysis.sell.relevance import relevance
 from modules.database.methods import get
 
 
