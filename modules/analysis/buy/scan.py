@@ -3,9 +3,10 @@
 from decimal import Decimal
 
 from config import Settings
+from typing import Final
 
-GROWTH_RANGE_FROM = Settings.GROWTH_RANGE_FROM
-GROWTH_RANGE_TO = Settings.GROWTH_RANGE_TO
+GROWTH_RANGE_FROM: Final = Settings.GROWTH_RANGE_FROM
+GROWTH_RANGE_TO: Final = Settings.GROWTH_RANGE_TO
 
 
 def scan(tickers: list) -> tuple:
