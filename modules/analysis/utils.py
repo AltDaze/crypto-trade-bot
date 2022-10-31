@@ -8,5 +8,7 @@ def percent_difference(first: Union[int, float, Decimal],
                        second: Union[int, float, Decimal]) -> Decimal:
     if first < second:
         first, second = second, first
-    difference = (first / second - 1) * 100
-    return Decimal(difference)
+    difference: Decimal = Decimal(
+        (first / second - 1) * 100
+    )
+    return difference
