@@ -10,7 +10,7 @@ from binance import Client
 
 from modules.analysis.purchase_analysis import analysis
 from modules.analysis.scan import scan
-from modules.database import get, create
+from modules.database.methods import get
 from modules.trade.binance.buy.utils import get_prices, get_qty, get_min_notional
 
 with open('{0}/../../../../settings.yaml'.format(os.path.dirname(__file__)), 'r', encoding="utf8") as file:

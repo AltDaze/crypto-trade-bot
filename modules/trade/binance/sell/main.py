@@ -8,7 +8,7 @@ import yaml
 from binance import Client
 from binance.helpers import round_step_size
 
-from modules.database import get, delete
+from modules.database.methods import get, delete
 from .utils import get_relevance
 
 with open('{0}/../../../../settings.yaml'.format(os.path.dirname(__file__)), 'r', encoding="utf8") as file:

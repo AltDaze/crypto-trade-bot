@@ -6,7 +6,7 @@ from decimal import Decimal
 from binance import Client
 
 from modules.analysis.relevance import relevance
-from modules.database import get
+from modules.database.methods import get
 
 
 def get_relevance(client: Client, coin: str) -> bool:

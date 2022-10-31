@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from modules.database.other import with_connection, exception_handler
+from modules.database.methods.other import with_connection, exception_handler
 
 
 @exception_handler
