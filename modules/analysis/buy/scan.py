@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os
 from decimal import Decimal
 
-import yaml
+from config import Settings
 
-with open("{0}/../../settings.yaml".format(os.path.dirname(__file__)), 'r', encoding="utf8") as file:
-    settings = yaml.safe_load(file)
-
-GROWTH_FROM = settings['trade']['growth_range']['from']
-GROWTH_TO = settings['trade']['growth_range']['to']
+GROWTH_RANGE_FROM = Settings.GROWTH_RANGE_FROM
+GROWTH_RANGE_TO = Settings.GROWTH_RANGE_TO
 
 
 def scan(tickers: list) -> tuple:
@@ -18,6 +14,6 @@ def scan(tickers: list) -> tuple:
     for ticker in tickers:
         growth: Decimal = Decimal(ticker['priceChangePercent'])
         symbol: str = ticker.get("symbol")
-        if symbol.endswith('BUSD') and GROWTH_FROM < growth < GROWTH_TO:
+        if symbol.endswith('BUSD') and GROWTH_RANGE_FROM < growth < GROWTH_RANGE_TO:
             symbols.append(symbol)
     return tuple(symbols)

@@ -21,9 +21,14 @@ class ClientSettings:
 
 
 class Settings:
-    DEFAULT_PAIR: str = settings['trade']['default_pair']
-    PRICE_TO_BUY: float = settings['trade']['price_to_buy']
+    DEMO: bool = settings['trade']['demo']
     COINS_LIMIT: int = settings['trade']['coins_limit']
+    PRICE_TO_BUY: float = settings['trade']['price_to_buy']
+    DEFAULT_PAIR: str = settings['trade']['default_pair']
+    SELL_FALL_PERCENTAGE: float = settings['trade']['sell']['fall_percentage']
+    BUY_FALL_PERCENTAGE: float = settings['trade']['buy']['fall_percentage']
+    GROWTH_RANGE_FROM: int = settings['trade']['growth_range']['from']
+    GROWTH_RANGE_TO: int = settings['trade']['growth_range']['to']
 
 
 class Database:

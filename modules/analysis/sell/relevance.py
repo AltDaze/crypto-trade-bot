@@ -1,21 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import os
 from decimal import Decimal
 
-import yaml
-
+from config import Settings
 from modules.analysis.utils import percent_difference
 
-with open('{0}/../../settings.yaml'.format(os.path.dirname(__file__)), 'r', encoding="utf8") as file:
-    settings = yaml.safe_load(file)
-
-FALL_PERCENTAGE = settings['trade']['sell']['fall_percentage']
+SELL_FALL_PERCENTAGE = Settings.SELL_FALL_PERCENTAGE
 
 
 def relevance(exchange_rate: Decimal, highest_price: Decimal) -> bool:
     # Returns True if the coin is still active, else False
-    if percent_difference(highest_price, exchange_rate) > FALL_PERCENTAGE:
+    if percent_difference(highest_price, exchange_rate) > SELL_FALL_PERCENTAGE:
         # If the difference is greater than N%, then the coin is sold
         return True
     return False
